@@ -399,7 +399,7 @@ def show_remediation_panel(failure_counts):
         return
 
     remediation_df = build_remediation_dataframe(failure_counts)
-    st.dataframe(remediation_df, use_container_width=True)
+    st.dataframe(remediation_df, width="stretch")
 
 
 def show_manufacturer_and_model_breakdowns(details_df):
@@ -415,13 +415,13 @@ def show_manufacturer_and_model_breakdowns(details_df):
         if manufacturer_summary.empty:
             st.info("Manufacturer data was not found in the uploaded CSV.")
         else:
-            st.dataframe(manufacturer_summary, use_container_width=True)
+            st.dataframe(manufacturer_summary, width="stretch")
 
     with tab2:
         if model_summary.empty:
             st.info("Model data was not found in the uploaded CSV.")
         else:
-            st.dataframe(model_summary, use_container_width=True)
+            st.dataframe(model_summary, width="stretch")
 
 
 def show_device_details(details_df):
@@ -452,7 +452,7 @@ def show_device_details(details_df):
         category_filter,
     )
 
-    st.dataframe(filtered_df, use_container_width=True)
+    st.dataframe(filtered_df, width="stretch")
 
     return filtered_df
 
