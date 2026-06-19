@@ -7,6 +7,10 @@ def load_devices(csv_file):
     return pd.read_csv(csv_file)
 
 
+def analyze_dataframe(df):
+    return [analyze_device(row) for _, row in df.iterrows()]
+
+
 def summarize_results(results):
     total = len(results)
     ready = sum(1 for r in results if r["Ready"])
@@ -20,11 +24,6 @@ def format_result_row(result):
         "Ready": "Yes" if result["Ready"] else "No",
         "Failures": ", ".join(result["Failures"]) or "None"
     }
-
-
-def analyze_dataframe(df):
-    results = [analyze_device(row) for _, row in df.iterrows()]
-    return results
 
 
 def main():
@@ -57,23 +56,82 @@ def main():
     results = analyze_dataframe(df)
     total, ready, not_ready = summarize_results(results)
 
-    score_cols = st.columns(3)
+    readiness_score = round((ready / total) * 100) if total > 0 else 0
+
+    score_cols = st.columns(4)
     score_cols[0].metric("Total devices", total)
     score_cols[1].metric("Ready for Windows 11", ready)
     score_cols[2].metric("Not ready", not_ready)
+    score_cols[3].metric("Readiness score", f"{readiness_score}%")
+
+    if readiness_score >= 90:
+        st.success(f"Readiness Score: {readiness_score}% - Strong readiness for Windows 11 deployment.")
+    elif readiness_score >= 70:
+        st.warning(f"Readiness Score: {readiness_score}% - Some remediation is needed before deployment.")
+    else:
+        st.error(f"Readiness Score: {readiness_score}% - Significant remediation is needed before deployment.")
 
     all_failures = [failure for result in results for failure in result["Failures"]]
     failure_counts = pd.Series(all_failures).value_counts()
 
-    st.subheader("Top blockages")
+    st.subheader("Executive summary")
+
     if not failure_counts.empty:
-        st.table(failure_counts.rename_axis("Blocker").reset_index(name="Count"))
+        top_blocker = failure_counts.index[0]
+        st.write(
+            f"{total} devices were assessed. "
+            f"{ready} devices are ready for Windows 11 and {not_ready} require remediation. "
+            f"The current readiness score is {readiness_score}%. "
+            f"The most common blocker is: **{top_blocker}**."
+        )
+    else:
+        st.write(
+            f"{total} devices were assessed. All devices are currently ready for Windows 11."
+        )
+
+    st.subheader("Top blockages")
+
+    if not failure_counts.empty:
+        blockers_df = failure_counts.rename_axis("Blocker").reset_index(name="Count")
+
+        st.bar_chart(blockers_df.set_index("Blocker"))
+
+        st.table(blockers_df)
     else:
         st.success("No blockers found — all devices are ready.")
 
     st.subheader("Device readiness details")
+
     details_df = pd.DataFrame([format_result_row(result) for result in results])
-    st.dataframe(details_df, use_container_width=True)
+
+    details_df["Status"] = details_df["Ready"].apply(
+        lambda value: "🟢 Ready" if value == "Yes" else "🔴 Blocked"
+    )
+
+    details_df = details_df[
+        ["ComputerName", "Status", "Ready", "Failures"]
+    ]
+
+    search = st.text_input("Search computer name")
+
+    status_filter = st.selectbox(
+        "Show devices",
+        ["All", "Ready", "Blocked"]
+    )
+
+    filtered_df = details_df.copy()
+
+    if search:
+        filtered_df = filtered_df[
+            filtered_df["ComputerName"].str.contains(search, case=False, na=False)
+        ]
+
+    if status_filter == "Ready":
+        filtered_df = filtered_df[filtered_df["Ready"] == "Yes"]
+    elif status_filter == "Blocked":
+        filtered_df = filtered_df[filtered_df["Ready"] == "No"]
+
+    st.dataframe(filtered_df, use_container_width=True)
 
     with st.expander("Show devices with failures"):
         for result in results:
@@ -82,16 +140,11 @@ def main():
                 for failure in result["Failures"]:
                     st.write(f"- {failure}")
 
-    if not df.empty:
-        export_df = details_df.copy()
-        export_csv = export_df.to_csv(index=False).encode("utf-8")
-        st.download_button(
-            label="Download readiness results as CSV",
-            data=export_csv,
-            file_name="windows11_readiness_results.csv",
-            mime="text/csv",
-        )
+    export_csv = filtered_df.to_csv(index=False).encode("utf-8")
 
-
-if __name__ == "__main__":
-    main()
+    st.download_button(
+        label="Download filtered readiness results as CSV",
+        data=export_csv,
+        file_name="windows11_readiness_results.csv",
+        mime="text/csv",
+    )
