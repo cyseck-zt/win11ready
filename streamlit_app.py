@@ -495,12 +495,13 @@ def show_device_drilldown(details_df):
     ]
 
     device_info = {
-        column: device_row.get(column, "Unknown")
-        for column in device_info_columns
-        if column in details_df.columns
-    }
+    column: str(device_row.get(column, "Unknown"))
+    for column in device_info_columns
+    if column in details_df.columns
+}
 
-    st.table(pd.DataFrame(device_info.items(), columns=["Field", "Value"]))
+    device_info_df = pd.DataFrame(device_info.items(), columns=["Field", "Value"])
+    st.table(device_info_df)
 
     st.write("### Failures and recommendations")
 
