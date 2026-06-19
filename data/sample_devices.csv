@@ -1,0 +1,11 @@
+ComputerName,Manufacturer,Model,Processor,RAM_GB,Storage_GB,TPM_Present,TPM_Version,SecureBoot,CPU_Supported,Disk_Free_GB,OSVersion
+DESKTOP-001,Lenovo,ThinkPad X1 Carbon Gen 9,Intel Core i7-1165G7,16,512,True,2.0,Enabled,True,160,Windows 10 22H2
+DESKTOP-002,Dell,Latitude 7490,Intel Core i5-8350U,8,256,True,1.2,Enabled,True,72,Windows 10 22H2
+DESKTOP-003,HP,EliteBook 840 G5,Intel Core i5-8250U,8,256,False,0,Disabled,True,81,Windows 10 22H2
+DESKTOP-004,Lenovo,ThinkPad T470,Intel Core i5-6300U,8,256,True,2.0,Enabled,False,19,Windows 10 21H2
+DESKTOP-005,Dell,OptiPlex 7050,Intel Core i5-7500,16,512,True,2.0,Enabled,True,220,Windows 10 22H2
+DESKTOP-006,HP,ProBook 450 G4,Intel Core i5-7200U,4,128,True,2.0,Disabled,False,42,Windows 10 21H2
+DESKTOP-007,Lenovo,ThinkPad X1 Carbon Gen 10,Intel Core i7-1260P,16,512,True,2.0,Enabled,True,300,Windows 10 22H2
+DESKTOP-008,Dell,Latitude 5420,Intel Core i5-1135G7,16,256,True,2.0,Enabled,True,94,Windows 10 22H2
+DESKTOP-009,HP,EliteDesk 800 G3,Intel Core i5-6500,8,128,True,1.2,Enabled,False,65,Windows 10 21H2
+DESKTOP-010,Lenovo,ThinkPad X1 Carbon Gen 6,Intel Core i7-8650U,8,256,True,2.0,Enabled,True,13,Windows 10 22H2
