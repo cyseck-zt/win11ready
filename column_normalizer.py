@@ -7,24 +7,29 @@ COLUMN_ALIASES = {
         "Name",
         "Resource Name",
         "Netbios Name",
+        "Netbios_Name0",
     ],
     "Manufacturer": [
         "Manufacturer",
         "System Manufacturer",
         "Device Manufacturer",
         "Vendor",
+        "Manufacturer0",
     ],
     "Model": [
         "Model",
         "System Model",
         "Device Model",
         "Computer Model",
+        "Model0",
     ],
     "Processor": [
         "Processor",
         "CPU",
         "CPU Name",
         "Processor Name",
+        "Name0",
+        "Processor0",
     ],
     "RAM_GB": [
         "RAM_GB",
@@ -33,7 +38,9 @@ COLUMN_ALIASES = {
         "Memory GB",
         "Installed Memory",
         "Total Physical Memory",
+        "Total Physical Memory GB",
         "TotalPhysicalMemoryGB",
+        "TotalPhysicalMemory0",
     ],
     "Storage_GB": [
         "Storage_GB",
@@ -42,6 +49,7 @@ COLUMN_ALIASES = {
         "Disk Size GB",
         "Total Disk Space",
         "Total Storage",
+        "Size0",
     ],
     "TPM_Present": [
         "TPM_Present",
@@ -49,24 +57,23 @@ COLUMN_ALIASES = {
         "TPM Enabled",
         "TPM",
         "Is TPM Present",
+        "IsEnabled_InitialValue0",
+        "IsActivated_InitialValue0",
+        "IsOwned_InitialValue0",
     ],
     "TPM_Version": [
         "TPM_Version",
         "TPM Version",
         "TPM Spec Version",
         "TPM SpecVersion",
+        "SpecVersion0",
     ],
     "SecureBoot": [
         "SecureBoot",
         "Secure Boot",
         "Secure Boot Enabled",
         "UEFI Secure Boot",
-    ],
-    "CPU_Supported": [
-        "CPU_Supported",
-        "CPU Supported",
-        "Processor Supported",
-        "Supported Processor",
+        "SecureBoot0",
     ],
     "Disk_Free_GB": [
         "Disk_Free_GB",
@@ -75,6 +82,7 @@ COLUMN_ALIASES = {
         "Free Space GB",
         "Available Storage",
         "Available Disk Space",
+        "FreeSpace0",
     ],
     "OSVersion": [
         "OSVersion",
@@ -82,6 +90,8 @@ COLUMN_ALIASES = {
         "Operating System",
         "OperatingSystem",
         "Windows Version",
+        "Caption0",
+        "BuildNumber0",
     ],
 }
 
@@ -120,8 +130,8 @@ def get_missing_required_columns(df):
         "TPM_Present",
         "TPM_Version",
         "SecureBoot",
-        "CPU_Supported",
         "Disk_Free_GB",
+        "Processor",
     ]
 
     return [column for column in required_columns if column not in df.columns]
